@@ -134,6 +134,7 @@ tfoot td{font-weight:700;border-top:2px solid var(--line-strong);border-bottom:0
   <div class="tabs" role="tablist">
     <button class="tab" id="t-target" role="tab" aria-selected="true" aria-controls="p-target">التارقت اليومي</button>
     <button class="tab" id="t-perf" role="tab" aria-selected="false" aria-controls="p-perf">أداء الفروع</button>
+    <button class="tab" id="t-fin" role="tab" aria-selected="false" aria-controls="p-fin">القوائم المالية</button>
     <button class="tab" id="t-prod" role="tab" aria-selected="false" aria-controls="p-prod">مبيعات المنتجات</button>
     <button class="tab" id="t-week" role="tab" aria-selected="false" aria-controls="p-week">أيام الأسبوع</button>
     <button class="tab" id="t-rec" role="tab" aria-selected="false" aria-controls="p-rec">القراءة والتوصيات</button>
@@ -283,6 +284,85 @@ tfoot td{font-weight:700;border-top:2px solid var(--line-strong);border-bottom:0
       </div>
     </div>
     <p class="foot-note">المصدر: تقرير الفروع الشهري. صافي المبيعات = إجمالي المبيعات − الخصم − الضريبة. «عدد الزوار» في التقرير مطابق لعدد الطلبات، فلا يصلح لحساب نسبة التحويل. قد يختلف صافي المبيعات هنا قليلًا عن مجموع شيت التارقت اليومي لأن المصدرين يحسبان المرتجعات والخصم بطريقة مختلفة.</p>
+  </section>
+
+
+  <section id="p-fin" role="tabpanel" aria-labelledby="t-fin" hidden="">
+    <div id="fin-body">
+      <div class="kpis">
+        <div class="kpi lead"><div class="label">الإيرادات المحاسبية</div><div class="val" id="f-rev">—</div><div class="foot" id="f-rev-f"></div></div>
+        <div class="kpi"><div class="label">إجمالي الربح</div><div class="val" id="f-gp">—</div><div class="foot" id="f-gp-f"></div></div>
+        <div class="kpi"><div class="label">صافي الربح / الخسارة</div><div class="val" id="f-net">—</div><div class="foot" id="f-net-f"></div></div>
+        <div class="kpi"><div class="label">النقد آخر الشهر</div><div class="val" id="f-cash">—</div><div class="foot" id="f-cash-f"></div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><h3>من الإيراد إلى صافي الربح</h3><span class="note" id="fin-wf-note"></span></div>
+        <div class="seg" style="margin-top:12px;width:max-content;max-width:100%;overflow-x:auto" role="group" aria-label="اختيار الجهة">
+          <button data-fb="all" aria-pressed="true">الإجمالي</button>
+          <button data-fb="kh" aria-pressed="false">الخبر</button>
+          <button data-fb="dm" aria-pressed="false">الدمام</button>
+          <button data-fb="cat" aria-pressed="false">الكاترينج</button>
+        </div>
+        <div class="legend">
+          <span><i class="swatch" style="background:var(--crit)"></i> تكلفة متكررة</span>
+          <span><i class="swatch" style="background:var(--gold)"></i> مصروف لمرة واحدة</span>
+        </div>
+        <div class="chart" id="c-fin-wf"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><h3>قائمة الدخل حسب الفرع</h3><span class="note" id="fin-period"></span></div>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>البند</th><th>فرع الخبر</th><th>فرع الدمام</th><th>الكاترينج</th><th>الإجمالي</th></tr></thead>
+            <tbody id="fin-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <div class="card-h"><h3>نقطة التعادل لكل فرع</h3><span class="note">الخط الأسود = التعادل</span></div>
+          <div class="ach-rows" id="fin-be"></div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h3>أكبر بنود التكاليف</h3><span class="note" id="fin-exp-note"></span></div>
+          <div class="chart" id="c-fin-exp"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><h3>حركة النقد في البنوك والصندوق</h3><span class="note">من بيان المقبوضات والمدفوعات</span></div>
+        <div class="chart" id="c-fin-cash"></div>
+        <p id="fin-cash-note" style="font-size:13.5px;line-height:1.9;color:var(--ink-2);margin:12px 0 0"></p>
+        <div class="tablewrap">
+          <table style="min-width:420px"><thead><tr><th>مجموعة المدفوعات</th><th>المبلغ</th><th>الحصة</th></tr></thead><tbody id="fin-cash-t"></tbody></table>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <div class="card-h"><h3>تكاليف تجهيز فرع الدمام</h3><span class="note" id="fin-capex-note"></span></div>
+          <div class="chart" id="c-fin-capex"></div>
+          <div class="tablewrap">
+            <table style="min-width:360px"><thead><tr><th>تفصيل التحسينات على الأصول المستأجرة</th><th>المبلغ</th></tr></thead><tbody id="fin-capex-t"></tbody></table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h3>مطابقة المبيعات مع قائمة الدخل</h3><span class="note">للتأكد أن المصدرين يتكلمان عن نفس الشهر</span></div>
+          <div id="fin-recon"></div>
+          <div style="font-family:var(--font-d);font-weight:700;font-size:14px;margin-top:16px">ملاحظات على المرفقات نفسها</div>
+          <ul id="fin-checks" style="font-size:13px;line-height:1.85;color:var(--ink-2);padding-inline-start:18px;margin:8px 0 0"></ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><h3>ملاحظات المحاسب وما بُني عليها في الداشبورد</h3><span class="note">من إقفال الشهر</span></div>
+        <div id="fin-notes"></div>
+      </div>
+      <p class="foot-note">المصدر: إقفال شهر سبتمبر (قائمة الدخل، بيان المقبوضات والمدفوعات) وبيان تكاليف فرع الدمام. الأرقام كما وردت، ومجاميع قائمة الدخل كما اعتمدها المحاسب.</p>
+    </div>
   </section>
 
   <section id="p-prod" role="tabpanel" aria-labelledby="t-prod" hidden="">
@@ -938,7 +1018,7 @@ function drawProducts(){
 }
 
 /* ================= tabs ================= */
-const PANELS={'t-target':'p-target','t-perf':'p-perf','t-prod':'p-prod','t-week':'p-week','t-rec':'p-rec','t-oct':'p-oct','t-in':'p-in'};
+const PANELS={'t-target':'p-target','t-perf':'p-perf','t-prod':'p-prod','t-week':'p-week','t-rec':'p-rec','t-oct':'p-oct','t-in':'p-in','t-fin':'p-fin'};
 function redrawOpen(){
   const open=document.querySelector('.tab[aria-selected="true"]').id;
   if(open==='t-target'){renderAll();drawBranches();}
@@ -947,13 +1027,14 @@ function redrawOpen(){
   else if(open==='t-week')drawWeek();
   else if(open==='t-rec')drawRec();
   else if(open==='t-oct')drawOct();
+  else if(open==='t-fin')drawFin();
 }
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
   document.querySelectorAll('.tab').forEach(x=>{
     x.setAttribute('aria-selected',String(x===t));
     document.getElementById(PANELS[x.id]).hidden=(x!==t);
   });
-  document.querySelector('.seg[aria-label="اختيار الفرع"]').style.visibility=(t.id==='t-prod'||t.id==='t-rec'||t.id==='t-oct'||t.id==='t-in')?'hidden':'visible';
+  document.querySelector('.seg[aria-label="اختيار الفرع"]').style.visibility=(t.id==='t-prod'||t.id==='t-fin'||t.id==='t-rec'||t.id==='t-oct'||t.id==='t-in')?'hidden':'visible';
   redrawOpen();
 }));
 document.querySelectorAll('[data-br]').forEach(b=>b.addEventListener('click',()=>{
@@ -1049,9 +1130,10 @@ function drawRec(){
   const dmDays=S_DM.filter(v=>v>0).length;
   document.getElementById('rec-sum').innerHTML=`
   <p style="margin:0 0 10px">الشهر أغلق على <b>${money(R.all.net)} ر.س</b> صافي مبيعات مقابل تارقت ${money(R.all.target)} — تحقيق ${pct(R.all.net/R.all.target)}. متوسط قيمة الطلب متقارب بين الفرعين، فالفجوة في <b>حجم الحركة</b> لا في قيمة الطلب.</p>
-  <p style="margin:0 0 10px">فرع الدمام عمل ${dmDays} يومًا هذا الشهر، وتارقته ${money(R.dm.target)} ر.س مقابل ${money(R.kh.target)} ر.س لفرع الخبر. تحقيقه ${pct(R.dm.net/R.dm.target)}${dmDays<N?'، وفي شهر افتتاح هذا يعكس هدفًا مرتفعًا أكثر مما يعكس ضعف أداء':''}.</p>
+  <p style="margin:0 0 10px">فرع الدمام عمل ${dmDays} يومًا هذا الشهر، وتارقته ${money(R.dm.target)} ر.س مقابل ${money(R.kh.target)} ر.س لفرع الخبر. تحقيقه ${pct(R.dm.net/R.dm.target)}${finIsCur()?finDmLine():(dmDays<N?'، وفي شهر افتتاح هذا يعكس هدفًا مرتفعًا أكثر مما يعكس ضعف أداء':'')}.</p>
   <p style="margin:0">أقوى يوم في الشهر (اليوم ${bi+1}${bev?' — '+bev.s:''}) أعطى ${money(s[bi])} ر.س، أي ${pct(s[bi]/(sum(s)||1))} من مبيعات الشهر و${(s[bi]/dayAvg).toFixed(1)} ضعف المتوسط اليومي. هذا النوع من الأيام قابل للتكرار، وهو أهم نتيجة في الشهر.</p>`;
 
+  if(finIsCur())document.getElementById('rec-sum').insertAdjacentHTML('beforeend',finSumHtml());
   const quiet=avg('الأحد')+avg('الاثنين')+avg('السبت');
   const accRatio=R.dm.acc?R.kh.acc/R.dm.acc:0;
   const recs=[
@@ -1065,7 +1147,7 @@ function drawRec(){
     b:`التارقت الحالي يعطي الأحد والخميس أرقامًا متقاربة، فيظهر نصف الشهر «فاشلًا» بلا سبب حقيقي. أعد توزيع نفس إجمالي التارقت بأوزان الأيام الفعلية (تبويب تارقت الشهر القادم يحسبها تلقائيًا). النتيجة هدف يمكن قياس الأداء عليه فعلًا، وفريق لا يفقد حماسه من أرقام حمراء دائمة.`,
     k:`قراءة أدق للأداء بلا تغيير في الإجمالي`},
    {t:'قلّص وقت قبول الطلب في الخبر',
-    b:`متوسط قبول الطلب في الخبر ${hms(R.kh.acc)} مقابل ${hms(R.dm.acc)} في الدمام${accRatio>1?' — قرابة '+accRatio.toFixed(1)+' ضعف':''}. ومرتجعات الخبر ${money(R.kh.retAmt)} ر.س (${nf.format(R.kh.retQty)} قطعة) مقابل ${money(R.dm.retAmt)} ر.س في الدمام. الاثنان يشيران إلى ضغط تشغيلي في الخبر وقت الذروة. ابدأ بقياس ساعة الذروة وأضف يدًا إضافية فيها فقط.`,
+    b:`متوسط قبول الطلب في الخبر ${hms(R.kh.acc)} مقابل ${hms(R.dm.acc)} في الدمام${accRatio>1?' — قرابة '+accRatio.toFixed(1)+' ضعف':''}. ومرتجعات الخبر ${money(R.kh.retAmt)} ر.س (${nf.format(R.kh.retQty)} قطعة) مقابل ${money(R.dm.retAmt)} ر.س في الدمام. الاثنان يشيران إلى ضغط تشغيلي في الخبر وقت الذروة. ابدأ بقياس ساعة الذروة، وأعِد توزيع الطاقم الحالي عليها بدل إضافة عمالة جديدة.`,
     k:`تقليل المرتجعات نصفًا ≈ +${money(R.kh.retAmt/2)} ر.س مبيعات محفوظة`},
    {t:'اشتغل على تكرار الزيارة لا على عميل جديد',
     b:`الخبر: ${nf.format(R.kh.orders)} طلب من ${nf.format(R.kh.cust)} عميل = ${safe(R.kh.orders/R.kh.cust,1)} زيارة للعميل. الدمام: ${safe(R.dm.orders/R.dm.cust,1)}. رفع التكرار زيارة واحدة فقط لكل عميل يعني ${nf.format(R.all.cust)} طلب إضافي بمتوسط ${safe(R.all.net/R.all.orders,0)} ر.س. أداتها بطاقة ولاء بسيطة أو عرض «الكوب العاشر».`,
@@ -1074,8 +1156,9 @@ function drawRec(){
     b:`${top5.map(p=>p.name).join('، ')} تمثل ${pct(top5.reduce((a,p)=>a+p.sales,0)/tot)} من مبيعات المنتجات. في المقابل لديك ${P.filter(p=>p.sales<=0).length} أصناف لم تبع ولا وحدة و${P.filter(p=>p.sales>0&&p.sales<200).length} صنفًا تحت 200 ر.س. كل صنف راكد يأخذ مساحة في القائمة ووقت تدريب. احذف أو ادمج، وأعطِ الخمسة الكبار مكانًا بارزًا في القائمة وفي المحتوى.`,
     k:`قائمة أقصر = قرار أسرع للعميل وسرعة خدمة أعلى`}
   ];
+  if(finIsCur())recs.unshift(...finRecs());
   document.getElementById('rec-cards').innerHTML=
-   `<div class="card-h"><h3>${recs.length} خطوات مرتبة بالأولوية</h3><span class="note">مبنية على أرقام ${MNOW} وحدها</span></div>`+
+   `<div class="card-h"><h3>${recs.length} خطوات مرتبة بالأولوية</h3><span class="note">${finIsCur()?'مبنية على مبيعات وقائمة دخل '+MNOW:'مبنية على أرقام '+MNOW+' وحدها'}</span></div>`+
    recs.map((r,i)=>`<div style="display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)">
      <div style="font-family:var(--font-d);font-size:20px;font-weight:800;color:var(--accent);min-width:28px;line-height:1.2">${i+1}</div>
      <div style="min-width:0">
@@ -1125,7 +1208,7 @@ function octCalc(){
   const sc=SCEN[scen];
   if(scen==='fix'){
     const ap=APPROVED[key(NEXT.y,NEXT.m)];
-    sc.d='التارقت المعتمد: '+money(ap.kh)+' ر.س لفرع الخبر و'+money(ap.dm)+' ر.س لفرع الدمام، موزّع على أيام '+MNEXT+' حسب وزن كل يوم أسبوع في مبيعات '+MNOW+'، بلا أيام تفعيل. أي فرق من التقريب أُضيف لأعلى يوم حتى يطابق الإجمالي الرقم المعتمد بالضبط.';
+    sc.d='التارقت المعتمد: '+money(ap.kh)+' ر.س لفرع الخبر و'+money(ap.dm)+' ر.س لفرع الدمام، موزّع على أيام '+MNEXT+' حسب وزن كل يوم أسبوع في مبيعات '+MNOW+'، بلا أيام تفعيل. أي فرق من التقريب أُضيف لأعلى يوم حتى يطابق الإجمالي الرقم المعتمد بالضبط.'+(ap.kh===450000&&ap.dm===450000?' ويطابق الحد الأدنى الذي طلبه المحاسب في إقفال سبتمبر: 450 ألف ر.س لكل فرع.':'');
     return {kh:spread(ap.kh,KHB),dm:spread(ap.dm,DMB),act:[],sc};
   }
   const kh=[],dm=[],act=[];
@@ -1605,6 +1688,169 @@ function toast(html){
   ov.querySelectorAll('input').forEach(i=>i.addEventListener('input',()=>{err.textContent='';wrap.classList.remove('bad');}));
   setTimeout(()=>(SETUP?document.getElementById('f-orig'):inp).focus(),120);
 })();
+
+
+/* ================= القوائم المالية (مشفّرة برمز منفصل) ================= */
+let FIN={"period": "2026-09", "floor": 450000, "pl": {"rev": [362575.78, 272344.87, 36891.74, 671812.39], "cogs": [114292.26, 109337.77, 11358.59, 234988.62], "opw": [38073.89, 39425.94, 2309.0, 79808.83], "direct": [152366.47, 148764.11, 13667.9, 314798.47], "gp": [210209.31, 123580.76, 23223.84, 357013.92], "opexT": [162664.83, 369438.92, 810.0, 532913.53], "net": [47544.48, -245858.16, 22413.84, -175899.61], "opex": [{"k": "admin", "l": "الرواتب والرسوم الإدارية", "v": [21019.94, 21019.94, 0, 42039.88]}, {"k": "dep", "l": "مصروف إهلاك", "v": [31645, 4962, 0, 36607]}, {"k": "med", "l": "تأمين طبي ومصاريف طبية", "v": [1975, 1975, 0, 3950]}, {"k": "mkt", "l": "مصاريف تسويقية ودعائية", "v": [37750.36, 81178.93, 0, 118929.29]}, {"k": "rent", "l": "الإيجار", "v": [24855.05, 8666.66, 0, 33521.71]}, {"k": "gosi", "l": "التأمينات الاجتماعية", "v": [969.27, 969.27, 0, 1938.54]}, {"k": "gov", "l": "الرسوم الحكومية", "v": [1600, 3872.5, 0, 5472.5]}, {"k": "subs", "l": "رسوم واشتراكات", "v": [812.28, 714.28, 260, 1786.56]}, {"k": "elec", "l": "كهرباء", "v": [4979.02, 1589.06, 0, 6568.08]}, {"k": "office", "l": "مصاريف مكتبية ومطبوعات", "v": [0, 497, 0, 497]}, {"k": "hosp", "l": "مصاريف ضيافة", "v": [195, 59, 0, 254]}, {"k": "bank", "l": "رسوم وعمولات بنكية", "v": [6183.72, 4627.97, 0, 10811.69]}, {"k": "net", "l": "نت وجوال", "v": [350, 260, 0, 610]}, {"k": "iqama", "l": "إقامات وكروت عمل", "v": [9500, 9500, 0, 19000]}, {"k": "trans", "l": "نقل ومواصلات", "v": [301, 4802.2, 550, 5653.2]}, {"k": "fines", "l": "مخالفات وغرامات", "v": [2000, 0, 0, 2000]}, {"k": "maint", "l": "صيانة عامة", "v": [150, 2620, 0, 2770]}, {"k": "supp", "l": "مستلزمات تشغيلية", "v": [335.81, 12646.68, 0, 12982.49]}, {"k": "pub", "l": "خدمات عامة", "v": [0, 4300, 0, 4300]}, {"k": "cloth", "l": "ملابس", "v": [0, 1267.95, 0, 1267.95]}, {"k": "deliv", "l": "مصاريف تطبيقات التوصيل", "v": [8096.99, 4636.64, 0, 12733.63]}, {"k": "eosb", "l": "مصروف نهاية الخدمة", "v": [2082.29, 2641.25, 0, 4723.54]}, {"k": "clean", "l": "مصاريف نظافة", "v": [1500, 2500, 0, 4000]}, {"k": "fuel", "l": "محروقات", "v": [0, 130.62, 0, 130.62]}, {"k": "leave", "l": "مصاريف إجازة سنوية", "v": [3514, 4001.67, 0, 7515.67]}, {"k": "qual", "l": "متابعة جودة", "v": [2850, 0, 0, 2850]}, {"k": "khulu", "l": "خلو قدم", "v": [0, 190000, 0, 190000], "once": 1}]}, "cash": {"open": 485516.88, "inRev": 668256.91, "inCash": 34493.1, "outT": 843667.6, "close": 344599.29, "out": [{"l": "أصول (آلات ومعدات وإنشاءات)", "v": 94759.92, "g": "أصول وخلو قدم"}, {"l": "خلو", "v": 40000, "g": "أصول وخلو قدم"}, {"l": "مشتريات", "v": 252493.71, "g": "مشتريات"}, {"l": "رواتب وأجور", "v": 89185.27, "g": "رواتب وأجور"}, {"l": "تمويل بالية + فاتورة تنظيف", "v": 32591.5, "g": "تحويلات وسلف لشركات شقيقة"}, {"l": "سلفة شركة ونا", "v": 44034.08, "g": "تحويلات وسلف لشركات شقيقة"}, {"l": "سلفة شركة مشاري", "v": 80000, "g": "تحويلات وسلف لشركات شقيقة"}, {"l": "مخالفات", "v": 2000, "g": "تشغيل ورسوم أخرى"}, {"l": "عهدة متبقية", "v": 850, "g": "تشغيل ورسوم أخرى"}, {"l": "رسوم حكومية", "v": 1840, "g": "تشغيل ورسوم أخرى"}, {"l": "كهرباء", "v": 6985.01, "g": "تشغيل ورسوم أخرى"}, {"l": "رسوم واشتراكات", "v": 5311.02, "g": "تشغيل ورسوم أخرى"}, {"l": "رسوم بنكية", "v": 4406.53, "g": "تشغيل ورسوم أخرى"}, {"l": "إقامات وكروت عمل", "v": 10352, "g": "تشغيل ورسوم أخرى"}, {"l": "تأمينات اجتماعية", "v": 1707.5, "g": "تشغيل ورسوم أخرى"}, {"l": "مصاريف تسويقية", "v": 79739.38, "g": "تسويق"}, {"l": "مستلزمات تشغيلية", "v": 5742.29, "g": "تشغيل ورسوم أخرى"}, {"l": "نقل", "v": 900, "g": "تشغيل ورسوم أخرى"}, {"l": "نظافة", "v": 4225, "g": "تشغيل ورسوم أخرى"}, {"l": "ملابس", "v": 138, "g": "تشغيل ورسوم أخرى"}, {"l": "نت وجوال", "v": 701.5, "g": "تشغيل ورسوم أخرى"}, {"l": "مصاريف طبية", "v": 5429.04, "g": "تشغيل ورسوم أخرى"}, {"l": "خدمامات", "v": 2000, "g": "تشغيل ورسوم أخرى"}, {"l": "رواتب كاش", "v": 24953, "g": "رواتب وأجور"}, {"l": "سداد ونا كاش", "v": 5710, "g": "تحويلات وسلف لشركات شقيقة"}, {"l": "سلفة شركة مشاري كاش", "v": 14268, "g": "تحويلات وسلف لشركات شقيقة"}, {"l": "تسويق كاش", "v": 7000, "g": "تسويق"}, {"l": "عهدة فرع الدمام", "v": 1000, "g": "تشغيل ورسوم أخرى"}, {"l": "انتقالات", "v": 301, "g": "تشغيل ورسوم أخرى"}, {"l": "مشتريات كاش", "v": 671, "g": "مشتريات"}, {"l": "صيانة كاش", "v": 170, "g": "تشغيل ورسوم أخرى"}, {"l": "أدوات مكتبية كاش", "v": 497, "g": "تشغيل ورسوم أخرى"}, {"l": "أجهزة كهربائية", "v": 1109.5, "g": "أصول وخلو قدم"}, {"l": "تسويق (عهدة)", "v": 6004.79, "g": "تسويق"}, {"l": "رسوم واشتراكات (عهدة)", "v": 299, "g": "تشغيل ورسوم أخرى"}, {"l": "أجور نقل (عهدة)", "v": 463.25, "g": "تشغيل ورسوم أخرى"}, {"l": "ضيافة مكتب (عهدة)", "v": 59, "g": "تشغيل ورسوم أخرى"}, {"l": "صيانة (عهدة)", "v": 2720, "g": "تشغيل ورسوم أخرى"}, {"l": "مشتريات (عهدة)", "v": 1605.39, "g": "مشتريات"}, {"l": "شهادات صحية (عهدة)", "v": 4452.5, "g": "تشغيل ورسوم أخرى"}, {"l": "عمالة مستأجرة (عهدة)", "v": 1650, "g": "رواتب وأجور"}, {"l": "مستلزمات تشغيلية (عهدة)", "v": 5342.42, "g": "تشغيل ورسوم أخرى"}]}, "capex": {"total": 442980.93, "groups": [["آلات ومعدات", 193324.0], ["مقاولات وتحسينات على المحل", 181155.65], ["أثاث", 56992.0], ["أجهزة وطابعات وكاميرات", 11509.28]], "lease": [["أعمال مقاولات وتكسير", 86000], ["مقاولات طلاء وأرضيات", 30368.65], ["تجليد خشبي", 22275], ["تصاميم الفرع", 21000], ["لوحات الفرع (تصنيع وتوريد)", 14400], ["بوكس ألمنيوم لإضاءة البار", 4112], ["أعمال إنارة بوكس الألمنيوم", 3000]]}, "checks": ["تفصيل الآلات والمعدات في بيان الدمام مجموعه 193,324.91 بينما الملخص 193,324.00، والأثاث 56,992.66 مقابل 56,992.00 — فرق 1.57 ر.س فقط، اعتمدنا أرقام الملخص.", "مجاميع المصاريف التشغيلية في قائمة الدخل تزيد على مجموع بنودها بـ 0.10 ر.س (الخبر) و0.30 ر.س (الدمام)، وكذلك مجموع التكاليف المباشرة بكسور — فروقات تقريب، اعتمدنا المجاميع كما وردت.", "ملخص بيان النقد يسمّي الرصيد الختامي «الرصيد في 31/08/2026»، والصحيح 30/09/2026 حسب جدول الحركة. واسم ملف الإقفال يذكر 2027 بينما محتواه سبتمبر 2026.", "قائمة الدخل حمّلت الخلو كاملًا 190,000 ر.س على سبتمبر، بينما المدفوع منه نقدًا خلال الشهر 40,000 ر.س فقط. عرضناه كمصروف لمرة واحدة حتى لا يشوّه قراءة الربح المتكرر.", "إهلاك الخبر 31,645 ر.س مقابل 4,962 للدمام رغم أن تجهيز الدمام وحده 442,981 ر.س — يستحق التأكد من المحاسب أن إهلاك أصول الدمام الجديدة بدأ احتسابه."], "notes": [["ضرورة ألا تقل المبيعات عن 450 ألف ر.س لكل فرع", "التارقت المعتمد لأكتوبر في الداشبورد 450,000 ر.س لكل فرع ويطابق هذا الحد. أضفنا حساب نقطة التعادل: الدمام يتعادل قرب 395 ألف، فيصير 450 ألف حدًّا أدنى يحقق ربحًا لا رقمًا طموحًا."], ["اختلافات في تكلفة البضاعة تحتاج مدير تشغيل ومسؤول مخازن ومشتريات", "تكلفة البضاعة في الدمام 40% مقابل 32% في الخبر. أضفناها توصية أولى في تبويب «القراءة والتوصيات» مع قيمة الفجوة بالريال."], ["ارتفاع الرواتب والأجور التشغيلية والعمل على تقليل العمالة", "عدّلنا توصية الخبر السابقة التي كانت تقترح إضافة يد عاملة وقت الذروة؛ صارت: إعادة توزيع الطاقم الحالي على ساعة الذروة بدل زيادة العدد."], ["ارتفاع مصاريف التسويق مقارنة بالمبيعات", "تسويق الدمام 30% من إيراده. أضفنا توصية بسقف شهري نسبةً من المبيعات وقياس كل حملة بطلباتها."], ["خسارة الدمام في شهره الأول بسبب تحميل 190,000 خلو قدم", "فصلنا الخلو في قائمة الدخل والرسوم كبند لمرة واحدة، وعدّلنا قراءة الدمام في التوصيات لتذكر الخسارة الفعلية وسببها بدل الاكتفاء بأن التارقت كان مرتفعًا."]]}, finBr='all';
+const FBI={kh:0,dm:1,cat:2,all:3};
+const FBN={kh:'فرع الخبر',dm:'فرع الدمام',cat:'الكاترينج',all:'الإجمالي'};
+function fv(a,b){return a[FBI[b]];}
+function finIsCur(){return !!FIN&&key(MONTH.y,MONTH.m)===FIN.period;}
+function finCalc(b){
+  const P=FIN.pl;
+  const rev=fv(P.rev,b), cogs=fv(P.cogs,b), direct=fv(P.direct,b), gp=fv(P.gp,b),
+        opexT=fv(P.opexT,b), net=fv(P.net,b);
+  const once=P.opex.filter(r=>r.once).reduce((a,r)=>a+fv(r.v,b),0);
+  const mkt=fv(P.opex.find(r=>r.k==='mkt').v,b);
+  const opexRec=opexT-once, gm=rev?gp/rev:0;
+  return {rev,cogs,opw:fv(P.opw,b),wages:direct-cogs,direct,gp,opexT,once,opexRec,mkt,net,netx:net+once,gm,be:gm>0?opexRec/gm:NaN};
+}
+const sgn=v=>(v<0?'−':'')+money(Math.abs(v));
+const sgnP=v=>isFinite(v)?(v<0?'−':'')+Math.abs(v*100).toFixed(0)+'%':'—';
+const ltr=s=>'<span style="direction:ltr;display:inline-block">'+s+'</span>';
+
+function finWf(hostId,steps){
+  const host=document.getElementById(hostId);host.innerHTML='';
+  const Wx=Math.max(560,host.clientWidth||760),Hx=350,pl=64,pr=14,pt=28,pb=52;
+  const iw=Wx-pl-pr, ih=Hx-pt-pb;
+  const svg=el('svg',{viewBox:`0 0 ${Wx} ${Hx}`,role:'img'});host.appendChild(svg);
+  let run=0;
+  const bars=steps.map(s=>({s,a:0,b:s.t==='total'?s.v:Math.abs(s.v)}));
+  const vals=bars.flatMap(x=>[x.a,x.b]);
+  const lo=Math.min(0,...vals), hi=Math.max(0,...vals);
+  const step=niceMax((hi-lo)*1.12/5)||1;
+  const lo2=Math.floor(lo/step)*step, hi2=Math.max(lo2+step,Math.ceil(hi*1.1/step)*step);
+  const y=v=>pt+ih-(v-lo2)/(hi2-lo2)*ih;
+  for(let v=lo2;v<=hi2+1e-6;v+=step){
+    svg.appendChild(el('line',{x1:pl,x2:Wx-pr,y1:y(v),y2:y(v),stroke:Math.abs(v)<1e-6?'var(--ink-2)':'var(--line)','stroke-width':Math.abs(v)<1e-6?1.2:1}));
+    const t=el('text',{x:pl-8,y:y(v)+4,'text-anchor':'end',fill:'var(--muted)','font-size':11});
+    t.textContent=(v<0?'−':'')+(Math.abs(v)/1000).toFixed(0)+'k';svg.appendChild(t);
+  }
+  const gap=iw/bars.length, bw=Math.min(84,gap*0.6);
+  bars.forEach((x,i)=>{
+    const cx=pl+gap*i+gap/2, s=x.s, top=Math.min(y(x.a),y(x.b)), h=Math.max(2,Math.abs(y(x.b)-y(x.a)));
+    let fill;
+    if(s.t==='total')fill=s.last?(s.v>=0?'var(--good)':'var(--crit)'):'var(--s1)';
+    else fill=s.v<0?(s.once?'var(--gold)':'var(--crit)'):'var(--good)';
+    svg.appendChild(el('rect',{x:cx-bw/2,y:top,width:bw,height:h,rx:4,fill,'fill-opacity':s.t==='total'?1:.82}));
+    const val=el('text',{x:cx,y:x.b<0?top+h+15:top-7,'text-anchor':'middle',fill:'var(--ink)','font-size':11.5,'font-weight':600});
+    val.textContent=sgn(s.v);svg.appendChild(val);
+    const words=s.l.split(' '), half=Math.ceil(words.length/2);
+    const lines=s.l.length>13&&words.length>1?[words.slice(0,half).join(' '),words.slice(half).join(' ')]:[s.l];
+    lines.forEach((ln,j)=>{const t=el('text',{x:cx,y:Hx-30+j*14,'text-anchor':'middle',fill:'var(--ink-2)','font-size':11.5});t.textContent=ln;svg.appendChild(t);});
+  });
+}
+
+
+function drawFin(){
+  if(!FIN)return;
+  const A=finCalc('all'), K=finCalc('kh'), D=finCalc('dm'), C=finCalc('cat'), b=finCalc(finBr), P=FIN.pl, CF=FIN.cash;
+  const set=(id,h)=>{const e=document.getElementById(id);if(e)e.innerHTML=h;};
+  set('fin-period','قائمة الدخل والتدفق النقدي · '+MN[+FIN.period.slice(5)-1]+' '+FIN.period.slice(0,4));
+  set('f-rev',money(A.rev)+' <span class="cur">ر.س</span>');
+  set('f-rev-f','الخبر '+money(K.rev)+' · الدمام '+money(D.rev)+' · كاترينج '+money(C.rev));
+  set('f-gp',money(A.gp)+' <span class="cur">ر.س</span>');
+  set('f-gp-f','هامش '+pct(A.gm)+' · تكلفة البضاعة '+pct(A.cogs/A.rev)+' من الإيراد');
+  const fn=document.getElementById('f-net');fn.className='val'+(A.net<0?' neg':'');
+  set('f-net',ltr(sgn(A.net))+' <span class="cur">ر.س</span>');
+  set('f-net-f','بدون خلو القدم (مرة واحدة): '+ltr(sgn(A.netx))+' ر.س');
+  set('f-cash',money(CF.close)+' <span class="cur">ر.س</span>');
+  set('f-cash-f','بدأ الشهر عند '+money(CF.open)+' · صُرف '+pct(CF.outT/(CF.open+CF.inRev+CF.inCash))+' من المتاح');
+
+  document.querySelectorAll('[data-fb]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.fb===finBr)));
+  const st=[{l:'الإيرادات',v:b.rev,t:'total'},{l:'تكلفة البضاعة',v:-b.cogs,t:'d'},{l:'رواتب تشغيلية',v:-b.wages,t:'d'},
+            {l:'إجمالي الربح',v:b.gp,t:'total'},{l:'مصاريف تشغيلية',v:-b.opexRec,t:'d'}];
+  if(b.once)st.push({l:'خلو قدم (مرة واحدة)',v:-b.once,t:'d',once:1});
+  st.push({l:'صافي الربح',v:b.net,t:'total',last:1});
+  finWf('c-fin-wf',st);
+  set('fin-wf-note',FBN[finBr]+' · هامش صافي '+sgnP(b.net/b.rev));
+
+  const cols=[K,D,C,A];
+  const row=(l,f,cls)=>`<tr${cls?' style="'+cls+'"':''}><td style="text-align:right">${l}</td>${cols.map((c,i)=>`<td${i===3?' style="font-weight:700"':''}>${f(c)}</td>`).join('')}</tr>`;
+  const m=v=>{const s=nf1.format(Math.abs(v));return v<0?'<span class="neg">('+s+')</span>':s;};
+  const pc=v=>isFinite(v)?'<span style="color:var(--muted)">'+sgnP(v)+'</span>':'—';
+  set('fin-tbody',
+    row('الإيرادات',c=>m(c.rev))+
+    row('تكلفة البضاعة المباعة',c=>m(c.cogs))+
+    row('نسبة تكلفة البضاعة',c=>pc(c.cogs/c.rev))+
+    row('رواتب وأجور تشغيلية',c=>m(c.opw))+
+    row('إجمالي الربح',c=>'<b>'+m(c.gp)+'</b>','background:var(--surface-2)')+
+    row('هامش إجمالي الربح',c=>pc(c.gm))+
+    row('المصاريف التشغيلية',c=>m(c.opexT))+
+    row('منها: تسويق ودعاية',c=>m(c.mkt))+
+    row('نسبة التسويق من الإيراد',c=>pc(c.mkt/c.rev))+
+    row('منها: خلو قدم (مرة واحدة)',c=>c.once?m(c.once):'—')+
+    row('صافي الربح / الخسارة',c=>'<b>'+m(c.net)+'</b>','background:var(--surface-2)')+
+    row('هامش صافي الربح',c=>pc(c.net/c.rev))+
+    row('صافي الربح بدون الخلو',c=>m(c.netx)));
+
+  const ap=APPROVED['2026-10']||{kh:FIN.floor,dm:FIN.floor};
+  const be=(n,c,t)=>{
+    const profAtT=t*c.gm-c.opexRec, r=Math.min(1,c.rev/Math.max(c.be,t,1)), rb=Math.min(1,c.be/Math.max(c.be,t,1));
+    return `<div class="ach-row"><div class="top"><span>${n}</span><span style="color:var(--muted)">نقطة التعادل <b style="color:var(--ink)">${money(c.be)}</b> ر.س</span></div>
+      <div class="meter" style="position:relative"><i style="width:${r*100}%;background:${c.rev>=c.be?'var(--good)':'var(--crit)'}"></i>
+      <span style="position:absolute;top:-3px;bottom:-3px;inset-inline-start:${rb*100}%;width:2px;background:var(--ink)"></span></div>
+      <div style="font-size:12.5px;color:var(--ink-2);margin-top:6px">مبيعات ${MN[+FIN.period.slice(5)-1]} ${money(c.rev)} ر.س (${pct(c.rev/c.be)} من التعادل) · عند التارقت ${money(t)} ر.س الربح التشغيلي المتوقع ≈ ${ltr(sgn(profAtT))} ر.س</div></div>`;
+  };
+  set('fin-be',be('فرع الخبر',K,ap.kh)+be('فرع الدمام',D,ap.dm)+
+    `<p class="foot-note" style="margin-top:4px">نقطة التعادل = المصاريف التشغيلية المتكررة (بدون الخلو) ÷ هامش إجمالي الربح. تفترض بقاء نسب التكلفة كما هي؛ خفض تكلفة البضاعة أو التسويق في الدمام يُنزلها مباشرة.</p>`);
+
+  const items=[{name:'تكلفة البضاعة المباعة',v:b.cogs},{name:'رواتب وأجور تشغيلية',v:b.wages}]
+    .concat(P.opex.map(r=>({name:r.l,v:fv(r.v,finBr)}))).filter(x=>x.v>0).sort((a,c)=>c.v-a.v).slice(0,10);
+  hbars('c-fin-exp',items,x=>x.v,'var(--crit)');
+  set('fin-exp-note',FBN[finBr]+' · أعلى 10 بنود تمثل '+pct(items.reduce((a,x)=>a+x.v,0)/((b.direct+b.opexT)||1))+' من التكاليف');
+
+  const g={};CF.out.forEach(o=>{g[o.g]=(g[o.g]||0)+o.v;});
+  const gs=Object.entries(g).sort((a,c)=>c[1]-a[1]);
+  finWf('c-fin-cash',[{l:'رصيد أول الشهر',v:CF.open,t:'total'},{l:'تحصيلات الإيرادات',v:CF.inRev,t:'d'},{l:'تحصيلات نقدية',v:CF.inCash,t:'d'}]
+    .concat(gs.map(([k,v])=>({l:k,v:-v,t:'d'}))).concat([{l:'رصيد آخر الشهر',v:CF.close,t:'total',last:1}]));
+  set('fin-cash-t',gs.map(([k,v])=>`<tr><td style="text-align:right">${k}</td><td>${nf1.format(v)}</td><td>${pct(v/CF.outT)}</td></tr>`).join('')+
+    `<tr><td style="text-align:right"><b>إجمالي المدفوعات</b></td><td><b>${nf1.format(CF.outT)}</b></td><td>100%</td></tr>`);
+  const ic=g['تحويلات وسلف لشركات شقيقة']||0;
+  set('fin-cash-note',`صافي حركة النقد في الشهر ${ltr(sgn(CF.close-CF.open))} ر.س. التحصيلات (${money(CF.inRev+CF.inCash)}) غطّت ${pct((CF.inRev+CF.inCash)/CF.outT)} من المدفوعات، والباقي سُحب من الرصيد. التحويلات والسلف للشركات الشقيقة ${money(ic)} ر.س (${pct(ic/CF.outT)} من المدفوعات) خرجت من نقد وكاد دون أن تظهر كمصروف في قائمة الدخل — تستحق متابعة مستقلة.`);
+
+  const X=FIN.capex;
+  hbars('c-fin-capex',X.groups.map(x=>({name:x[0],v:x[1]})),x=>x.v,'var(--s2)');
+  set('fin-capex-note','الإجمالي '+money(X.total)+' ر.س');
+  set('fin-capex-t',X.lease.map(x=>`<tr><td style="text-align:right">${x[0]}</td><td>${nf1.format(x[1])}</td></tr>`).join('')+
+    `<tr><td style="text-align:right"><b>إجمالي التحسينات على الأصول المستأجرة</b></td><td><b>${nf1.format(X.lease.reduce((a,x)=>a+x[1],0))}</b></td></tr>`);
+
+  let rec='';
+  if(finIsCur()){
+    const rr=[['فرع الخبر',R.kh.net,sum(S_KH),K.rev],['فرع الدمام',R.dm.net,sum(S_DM),D.rev]];
+    rec=`<div class="tablewrap"><table><thead><tr><th>الفرع</th><th>صافي المبيعات (تقرير الفروع)</th><th>مجموع شيت التارقت</th><th>إيراد قائمة الدخل</th><th>الفرق عن تقرير الفروع</th></tr></thead><tbody>`+
+      rr.map(r=>`<tr><td style="text-align:right">${r[0]}</td><td>${nf1.format(r[1])}</td><td>${nf1.format(r[2])}</td><td>${nf1.format(r[3])}</td><td class="${r[3]-r[1]<0?'neg':''}">${nf1.format(r[3]-r[1])} (${r[1]?sgnP((r[3]-r[1])/r[1]):'—'})</td></tr>`).join('')+
+      `</tbody></table></div><p class="foot-note">إيراد قائمة الدخل محاسبي (بعد التسويات وعمولات المنصات أحيانًا) بينما صافي المبيعات من نظام الكاشير. فرق في حدود 1–3% طبيعي؛ ما فوق ذلك يستحق سؤال المحاسب عن مصدره. الكاترينج (${money(C.rev)} ر.س) إيراد منفصل لا يظهر في تقارير الفروع.</p>`;
+  }else rec='<p style="font-size:13px;color:var(--muted);margin:10px 0 0">المطابقة مع أرقام المبيعات تظهر عند عرض شهر '+MN[+FIN.period.slice(5)-1]+' '+FIN.period.slice(0,4)+' من قائمة الأشهر.</p>';
+  set('fin-recon',rec);
+  set('fin-checks',FIN.checks.map(c=>`<li style="margin-bottom:8px">${c}</li>`).join(''));
+  set('fin-notes',FIN.notes.map(n=>`<div style="padding:12px 0;border-bottom:1px solid var(--line)">
+     <div style="font-weight:600;color:var(--ink)">${n[0]}</div><div style="font-size:13px;color:var(--ink-2);margin-top:4px;line-height:1.9">${n[1]}</div></div>`).join(''));
+}
+document.querySelectorAll('[data-fb]').forEach(x=>x.addEventListener('click',()=>{finBr=x.dataset.fb;drawFin();}));
+
+/* إضافات القوائم المالية على تبويب القراءة والتوصيات */
+function finDmLine(){
+  const D=finCalc('dm');
+  return '. ماليًا أغلق الدمام على خسارة '+money(-D.net)+' ر.س، منها '+money(D.once)+' خلو قدم لمرة واحدة؛ وبدونها تبقى الخسارة '+money(-D.netx)+' ر.س بسبب تكلفة بضاعة '+pct(D.cogs/D.rev)+' وتسويق '+pct(D.mkt/D.rev)+' من الإيراد';
+}
+function finSumHtml(){
+  const A=finCalc('all'),K=finCalc('kh'),D=finCalc('dm');
+  return `<p style="margin:10px 0 0;padding:12px 14px;background:var(--surface-2);border-radius:10px">
+   <b>الصورة المالية:</b> الإيرادات المحاسبية ${money(A.rev)} ر.س، والشهر أغلق على خسارة ${money(-A.net)} ر.س (${sgnP(A.net/A.rev)}). لكن ${money(A.once)} منها خلو قدم دُفع مرة واحدة، فالتشغيل المتكرر في الحقيقة ${A.netx>=0?'رابح':'خاسر'} بـ${money(Math.abs(A.netx))} ر.س. الخبر يربح ${money(K.net)} ر.س (${sgnP(K.net/K.rev)})، والدمام يحتاج نحو ${money(D.be)} ر.س مبيعات شهرية ليتعادل — لذلك صار تارقت 450 ألف لكل فرع حدًّا أدنى لا هدفًا طموحًا.</p>`;
+}
+function finRecs(){
+  const D=finCalc('dm'),K=finCalc('kh'),A=finCalc('all');
+  const cogsGap=D.cogs/D.rev-K.cogs/K.rev, mktCap=0.12;
+  return [
+   {t:'أعِد تكلفة البضاعة في الدمام إلى مستوى الخبر',
+    b:`تكلفة البضاعة في الدمام ${pct(D.cogs/D.rev)} من الإيراد مقابل ${pct(K.cogs/K.rev)} في الخبر، بنفس القائمة تقريبًا. الفرق لا يفسّره السعر بل الهدر والجرد والشراء — وهذا ما طلبه المحاسب صراحة: مسؤول مخازن ومسؤول مشتريات ومدير تشغيل. ابدأ بوصفة معيارية بالجرام لأعلى 10 منتجات، وجرد أسبوعي للبن والحليب.`,
+    k:`إغلاق فجوة ${(cogsGap*100).toFixed(0)} نقاط ≈ ${money(cogsGap*D.rev)} ر.س شهريًا على مبيعات الدمام الحالية`},
+   {t:'اربط ميزانية التسويق بنسبة من المبيعات',
+    b:`تسويق الدمام ${money(D.mkt)} ر.س = ${pct(D.mkt/D.rev)} من إيراده، والخبر ${pct(K.mkt/K.rev)}. مفهوم في شهر الافتتاح، لكنه لا يستمر. حدّد سقفًا شهريًا ${(mktCap*100).toFixed(0)}% من مبيعات الشهر السابق، وقِس كل حملة بالطلبات التي جلبتها (كود خصم أو رابط خاص) قبل تجديدها.`,
+    k:`سقف ${(mktCap*100).toFixed(0)}% في الدمام يوفّر ≈ ${money(Math.max(0,D.mkt-mktCap*D.rev))} ر.س شهريًا`},
+  ];
+}
 
 let rz;
 addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(redrawOpen,180);});
